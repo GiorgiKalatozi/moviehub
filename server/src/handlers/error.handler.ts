@@ -10,7 +10,7 @@ class CustomError extends Error {
 }
 
 // Error handling middleware
-export function errorHandler(
+export default function errorHandler(
   err: Error,
   req: Request,
   res: Response,
