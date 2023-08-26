@@ -6,4 +6,5 @@ export default cleanEnv(process.env, {
   PORT: port(),
   TMDB_BASE_URL: str(),
   TMDB_KEY: str(),
+  TOKEN_SECRET: str(),
 });

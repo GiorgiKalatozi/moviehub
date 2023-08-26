@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
@@ -40,6 +40,8 @@ userSchema.methods.validPassword = function (password: string) {
   return this.password === hash;
 };
 
-const userModel = mongoose.model("User", userSchema);
+export type User = InferSchemaType<typeof userSchema>;
+
+const userModel = mongoose.model<User>("User", userSchema);
 
 export default userModel;
