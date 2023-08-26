@@ -1,7 +1,7 @@
-import axios from "axios";
+import { axiosClient } from "axios";
 
-const get = async (url: string) => {
-  const response = await axios.get(url);
+const get = async (url: string): Promise<any> => {
+  const response = await axiosClient.get(url);
   return response.data;
 };
 

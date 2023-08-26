@@ -1,5 +1,5 @@
-import axiosClient from "@/axios/axios.client";
-import tmdbEndpoints from "@/tmdb/tmdb.endpoint";
+import { axiosClient } from "@/axios";
+import { tmdbEndpoints } from "@/tmdb";
 import { MediaList, MediaSearch, MediaType } from "@/types";
 
 const tmdbApi = {
