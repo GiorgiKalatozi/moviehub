@@ -1,9 +1,15 @@
 import { RequestHandler } from "express";
 import { responseHandler } from "@/handlers";
 import jsonwebtoken from "jsonwebtoken";
-import { EMAIL_TAKEN, FIELDS_MISSING, USERNAME_TAKEN } from "@/constants";
+import {
+  EMAIL_TAKEN,
+  FIELDS_MISSING,
+  INVALID_PASSWORD,
+  USERNAME_TAKEN,
+  USER_NOT_FOUND,
+} from "@/constants";
 import { UserModel } from "@/models";
-import { SignUpBody } from "@/types";
+import { SignInBody, SignUpBody } from "@/types";
 import env from "@/utils/validate-env";
 import bcrypt from "bcrypt";
 
@@ -44,6 +50,46 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
       token,
       ...newUser.toJSON(),
       id: newUser.id,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password)
+      return responseHandler.badRequest(res, FIELDS_MISSING);
+
+    const user = await UserModel.findOne({ email }).select(
+      "username password email id"
+    );
+
+    if (!user) return responseHandler.badRequest(res, USER_NOT_FOUND);
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch)
+      return responseHandler.badRequest(res, INVALID_PASSWORD);
+
+    const token = jsonwebtoken.sign(
+      {
+        data: user.id,
+      },
+      env.TOKEN_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    return responseHandler.created(res, {
+      token,
+      ...user.toJSON(),
+      id: user.id,
     });
   } catch (error) {
     next(error);
