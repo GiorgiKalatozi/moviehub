@@ -3,14 +3,11 @@ import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
+    email: { type: String, required: true, unique: true },
     username: {
       type: String,
       required: true,
       unique: true,
-    },
-    displayName: {
-      type: String,
-      required: true,
     },
     password: {
       type: String,
@@ -42,6 +39,6 @@ userSchema.methods.validPassword = function (password: string) {
 
 export type User = InferSchemaType<typeof userSchema>;
 
-const userModel = mongoose.model<User>("User", userSchema);
+const UserModel = mongoose.model<User>("User", userSchema);
 
-export default userModel;
+export default UserModel;

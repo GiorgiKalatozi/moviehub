@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import { responseHandler } from "@/handlers";
 import env from "@/utils/validate-env";
-import { userModel, User } from "@/models";
+import { UserModel, User } from "@/models";
 
 interface DecodedToken extends JwtPayload {
   data: string;
@@ -35,7 +35,7 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
   if (!tokenDecoded) return responseHandler.unauthorized(res);
 
-  const user = await userModel.findById(tokenDecoded.data);
+  const user = await UserModel.findById(tokenDecoded.data);
 
   if (!user) return responseHandler.unauthorized(res);
 

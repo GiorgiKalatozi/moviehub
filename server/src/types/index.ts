@@ -14,3 +14,9 @@ export type MediaSearch = {
   query: string;
   page: string;
 };
+
+export type SignUpBody = {
+  username?: string;
+  email?: string;
+  password?: string;
+};
