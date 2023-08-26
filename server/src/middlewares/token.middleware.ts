@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
 import { responseHandler } from "@/handlers";
 import env from "@/utils/validate-env";
-import userModel, { User } from "@/models/user.model";
+import { userModel, User } from "@/models";
 
 interface DecodedToken extends JwtPayload {
   data: string;

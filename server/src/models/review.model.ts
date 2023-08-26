@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -32,6 +32,8 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const reviewModel = mongoose.model("Review", reviewSchema);
+type Review = InferSchemaType<typeof reviewSchema>;
+
+const reviewModel = mongoose.model<Review>("Review", reviewSchema);
 
 export default reviewModel;
