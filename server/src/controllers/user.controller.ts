@@ -1,15 +1,16 @@
-import { RequestHandler } from "express";
+import { NextFunction, RequestHandler, Response } from "express";
 import { responseHandler } from "@/handlers";
 import jsonwebtoken from "jsonwebtoken";
 import {
   EMAIL_TAKEN,
   FIELDS_MISSING,
   INVALID_PASSWORD,
+  PASSWORD_UPDATED,
   USERNAME_TAKEN,
   USER_NOT_FOUND,
 } from "@/constants";
 import { UserModel } from "@/models";
-import { SignInBody, SignUpBody } from "@/types";
+import { AuthUserRequest, SignInBody, SignUpBody } from "@/types";
 import env from "@/utils/validate-env";
 import bcrypt from "bcrypt";
 
@@ -75,8 +76,9 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!passwordMatch)
+    if (!passwordMatch) {
       return responseHandler.badRequest(res, INVALID_PASSWORD);
+    }
 
     const token = jsonwebtoken.sign(
       {
@@ -91,6 +93,38 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
       ...user.toJSON(),
       id: user.id,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updatePassword = async (
+  req: AuthUserRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { password, newPassword } = req.body;
+
+    if (!password || !newPassword)
+      return responseHandler.badRequest(res, FIELDS_MISSING);
+
+    const user = await UserModel.findById(req.user.id).select("password id");
+
+    if (!user) return responseHandler.unauthorized(res);
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return responseHandler.badRequest(res, INVALID_PASSWORD);
+    }
+
+    const newPasswordHashed = await bcrypt.hash(newPassword, 10);
+
+    user.password = newPasswordHashed;
+    await user.save();
+
+    return responseHandler.ok(res, PASSWORD_UPDATED);
   } catch (error) {
     next(error);
   }

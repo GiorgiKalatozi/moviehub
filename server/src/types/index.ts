@@ -1,3 +1,11 @@
+import { User } from "@/models";
+
+export type AuthUser = {
+  user: User & { id: string };
+};
+
+export type AuthUserRequest = Request & AuthUser & UpdatePasswordBody;
+
 export type MediaList = {
   mediaType: string;
   mediaCategory: string;
@@ -24,4 +32,11 @@ export type SignUpBody = {
 export type SignInBody = {
   email?: string;
   password?: string;
+};
+
+export type UpdatePasswordBody = {
+  body: {
+    password?: string;
+    newPassword?: string;
+  };
 };
