@@ -1,7 +1,8 @@
+import { ITEM_REMOVED } from "@/constants";
 import { responseHandler } from "@/handlers";
 import { FavoriteModel } from "@/models";
 import { AuthUserRequest } from "@/types";
-import { NextFunction, Response } from "express";
+import { NextFunction, RequestHandler, Response } from "express";
 
 const addFavorite = async (
   req: AuthUserRequest & {
@@ -28,6 +29,33 @@ const addFavorite = async (
     await favorite.save();
 
     return responseHandler.created(res, favorite);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeFavorite = async (
+  req: AuthUserRequest & {
+    params: {
+      favoriteId: string;
+    };
+  },
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { favoriteId } = req.params;
+
+    const favorite = await FavoriteModel.findOne({
+      user: req.user.id,
+      _id: favoriteId,
+    });
+
+    if (!favorite) return responseHandler.notFound(res);
+
+    await favorite.deleteOne();
+
+    return responseHandler.ok(res, ITEM_REMOVED);
   } catch (error) {
     next(error);
   }
