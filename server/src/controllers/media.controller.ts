@@ -31,3 +31,19 @@ const getList: RequestHandler<
     next(error);
   }
 };
+
+const getGenres: RequestHandler<{ mediaType: string }> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { mediaType } = req.params;
+
+    const response = await tmdbApi.mediaGenres({ mediaType });
+
+    return responseHandler.ok(res, response);
+  } catch (error) {
+    next(error);
+  }
+};
