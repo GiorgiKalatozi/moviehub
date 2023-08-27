@@ -1,6 +1,6 @@
-import { axiosClient } from "@/axios";
 import { tmdbEndpoints } from "@/tmdb";
 import { MediaList, MediaSearch, MediaType } from "@/types";
+import axiosClient from "@/utils/axios";
 
 const tmdbApi = {
   mediaList: async ({ mediaType, mediaCategory, page }: MediaList) =>
