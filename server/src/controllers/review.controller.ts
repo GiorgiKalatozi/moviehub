@@ -1,4 +1,3 @@
-import { ITEM_REMOVED } from "@/constants";
 import { responseHandler } from "@/handlers";
 import { ReviewModel } from "@/models";
 import { AuthUserRequest } from "@/types";
@@ -51,8 +50,26 @@ const remove = async (
 
     await review.deleteOne();
 
-    return responseHandler.ok(res, ITEM_REMOVED);
+    return responseHandler.ok(res, review);
   } catch (error) {
     next(error);
   }
 };
+
+const getReviewsOfUser = async (
+  req: AuthUserRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const reviews = await ReviewModel.find({
+      user: req.user.id,
+    }).sort("-createdAt");
+
+    return responseHandler.ok(res, reviews);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { create, remove, getReviewsOfUser };
