@@ -10,7 +10,12 @@ import {
   USER_NOT_FOUND,
 } from "@/constants";
 import { UserModel } from "@/models";
-import { AuthUserRequest, SignInBody, SignUpBody } from "@/types";
+import {
+  AuthUserRequest,
+  SignInBody,
+  SignUpBody,
+  UpdatePasswordBody,
+} from "@/types";
 import env from "@/utils/validate-env";
 import bcrypt from "bcrypt";
 
@@ -99,7 +104,7 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
 };
 
 const updatePassword = async (
-  req: AuthUserRequest,
+  req: AuthUserRequest & UpdatePasswordBody,
   res: Response,
   next: NextFunction
 ) => {
@@ -128,4 +133,27 @@ const updatePassword = async (
   } catch (error) {
     next(error);
   }
+};
+
+const getInfo = async (
+  req: AuthUserRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserModel.findById(req.user.id);
+
+    if (!user) return responseHandler.notFound(res);
+
+    return responseHandler.ok(res, user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default {
+  signUp,
+  signIn,
+  getInfo,
+  updatePassword,
 };

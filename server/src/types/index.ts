@@ -4,7 +4,7 @@ export type AuthUser = {
   user: User & { id: string };
 };
 
-export type AuthUserRequest = Request & AuthUser & UpdatePasswordBody;
+export type AuthUserRequest = Request & AuthUser;
 
 export type MediaList = {
   mediaType: string;
