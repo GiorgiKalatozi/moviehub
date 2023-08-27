@@ -34,6 +34,6 @@ const favoriteSchema = new mongoose.Schema(
 
 type Favorite = InferSchemaType<typeof favoriteSchema>;
 
-const favoriteModel = mongoose.model<Favorite>("Favorite", favoriteSchema);
+const FavoriteModel = mongoose.model<Favorite>("Favorite", favoriteSchema);
 
-export default favoriteModel;
+export default FavoriteModel;

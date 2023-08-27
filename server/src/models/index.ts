@@ -1,7 +1,7 @@
-import favoriteModel from "./favorite.model";
-import reviewModel from "./review.model";
+import FavoriteModel from "./favorite.model";
+import ReviewModel from "./review.model";
 import UserModel from "./user.model";
 
 export type { User } from "./user.model";
 
-export { favoriteModel, reviewModel, UserModel };
+export { FavoriteModel, ReviewModel, UserModel };

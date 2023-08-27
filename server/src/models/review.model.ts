@@ -34,6 +34,6 @@ const reviewSchema = new mongoose.Schema(
 
 type Review = InferSchemaType<typeof reviewSchema>;
 
-const reviewModel = mongoose.model<Review>("Review", reviewSchema);
+const ReviewModel = mongoose.model<Review>("Review", reviewSchema);
 
-export default reviewModel;
+export default ReviewModel;
