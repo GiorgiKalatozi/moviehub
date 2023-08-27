@@ -3,6 +3,7 @@ import { tmdbApi } from "@/tmdb";
 import { FavoriteModel, UserModel, ReviewModel } from "@/models";
 import { RequestHandler } from "express";
 import { FIELDS_MISSING } from "@/constants";
+import { tokenMiddleware } from "@/middlewares";
 
 const getList: RequestHandler<
   { mediaType: string; mediaCategory: string },
@@ -20,29 +21,30 @@ const getList: RequestHandler<
     if (!mediaType || !mediaCategory)
       return responseHandler.badRequest(res, FIELDS_MISSING);
 
-    const response = await tmdbApi.mediaList({
+    const mediaList = await tmdbApi.mediaList({
       mediaType,
       mediaCategory,
       page,
     });
 
-    return responseHandler.ok(res, response);
+    return responseHandler.ok(res, mediaList);
   } catch (error) {
     next(error);
   }
 };
 
-const getGenres: RequestHandler<{ mediaType: string }> = async (
-  req,
-  res,
-  next
-) => {
+const getGenres: RequestHandler<
+  { mediaType: string },
+  unknown,
+  unknown,
+  unknown
+> = async (req, res, next) => {
   try {
     const { mediaType } = req.params;
 
-    const response = await tmdbApi.mediaGenres({ mediaType });
+    const mediaGenres = await tmdbApi.mediaGenres({ mediaType });
 
-    return responseHandler.ok(res, response);
+    return responseHandler.ok(res, mediaGenres);
   } catch (error) {
     next(error);
   }
@@ -58,14 +60,63 @@ const search: RequestHandler<
     const { mediaType } = req.params;
     const { query, page } = req.query;
 
-    const response = await tmdbApi.mediaSearch({
+    const mediaSearch = await tmdbApi.mediaSearch({
       query,
       page,
       mediaType: mediaType === "people" ? "person" : mediaType,
     });
 
-    return responseHandler.ok(res, response);
+    return responseHandler.ok(res, mediaSearch);
   } catch (error) {
     next(error);
   }
 };
+
+const getDetail: RequestHandler<{
+  mediaType: string;
+  mediaId: string;
+}> = async (req, res, next) => {
+  try {
+    const { mediaId, mediaType } = req.params;
+
+    const params = { mediaId, mediaType };
+
+    const media = await tmdbApi.mediaDetail(params);
+
+    media.credits = await tmdbApi.mediaCredits(params);
+
+    const videos = await tmdbApi.mediaVideos(params);
+
+    media.videos = videos;
+
+    const recommend = await tmdbApi.mediaRecommend(params);
+
+    media.recommend = recommend.results;
+
+    media.images = await tmdbApi.mediaImages(params);
+
+    const tokenDecoded = tokenMiddleware.tokenDecode(req);
+
+    if (tokenDecoded) {
+      const user = await UserModel.findById(tokenDecoded.data);
+
+      if (user) {
+        const isFavorite = await FavoriteModel.findOne({
+          user: user.id,
+          mediaId,
+        });
+        media.isFavorite = isFavorite !== null;
+      }
+    }
+
+    media.reviews = await ReviewModel.find({ mediaId })
+      .populate("user")
+      .sort("-createdAt");
+
+    return responseHandler.ok(res, media);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { getList, getGenres, search, getDetail };
