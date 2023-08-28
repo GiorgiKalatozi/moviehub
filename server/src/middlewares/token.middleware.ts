@@ -30,7 +30,7 @@ const tokenDecode = (req: Request) => {
   }
 };
 
-const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+const auth = async (req: Request, res: Response, next: NextFunction) => {
   const tokenDecoded = tokenDecode(req);
 
   if (!tokenDecoded) return responseHandler.unauthorized(res);
@@ -39,7 +39,7 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
   if (!user) return responseHandler.unauthorized(res);
 
-  req.user = user;
+  (req as AuthRequest).user = user;
 
   next();
 };

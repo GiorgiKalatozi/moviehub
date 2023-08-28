@@ -1,4 +1,4 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import { body } from "express-validator";
 import { favoriteController, userController } from "@/controllers";
 import { requestHandler, responseHandler } from "@/handlers";
@@ -10,6 +10,8 @@ const router = express.Router();
 router.post(
   "/signup",
   body("username")
+    .exists()
+    .withMessage("username is required")
     .isLength({ min: 0 })
     .withMessage("username minimum 8 characters")
     .custom(async (value) => {
@@ -17,27 +19,68 @@ router.post(
       if (user) return Promise.reject("username already used");
     }),
   body("password")
+    .exists()
+    .withMessage("password is required")
     .isLength({ min: 0 })
     .withMessage("password minimum 8 characters"),
   body("confirmPassword")
+    .exists()
+    .withMessage("confirmPassword is required")
     .isLength({ min: 0 })
-    .withMessage("confirm password minimum 8 characters")
+    .withMessage("confirmPassword minimum 8 characters")
     .custom((value, { req }) => {
       if (value !== req.body.password)
         throw new Error("confirmPassword not match");
       return true;
     }),
-  body("email").isEmail().withMessage("enter a valid email"),
+  body("email")
+    .exists()
+    .withMessage("email is required")
+    .isEmail()
+    .withMessage("enter a valid email"),
   requestHandler.validate,
   userController.signUp
 );
 
 router.post(
   "/signin",
-  body("email").isEmail().withMessage("enter a valid email"),
+  body("email")
+    .exists()
+    .withMessage("email is required")
+    .isEmail()
+    .withMessage("enter a valid email"),
   body("password")
+    .exists()
+    .withMessage("password is required")
     .isLength({ min: 0 })
     .withMessage("password minimum 8 characters"),
   requestHandler.validate,
   userController.signIn
+);
+
+router.put(
+  "/update-password",
+  tokenMiddleware.auth,
+  body("password")
+    .exists()
+    .withMessage("password is required")
+    .isLength({ min: 0 })
+    .withMessage("password minimum 8 characters"),
+  body("newPassword")
+    .exists()
+    .withMessage("newPassword is required")
+    .isLength({ min: 0 })
+    .withMessage("newPassword minimum 8 characters"),
+  body("confirmNewPassword")
+    .exists()
+    .withMessage("confirmNewPassword is required")
+    .isLength({ min: 0 })
+    .withMessage("confirmNewPassword minimum 8 characters")
+    .custom((value, { req }) => {
+      if (value !== req.body.newPassword)
+        throw new Error("confirmNewPassword not match");
+      return true;
+    }),
+  requestHandler.validate,
+  userController.updatePassword as any
 );
