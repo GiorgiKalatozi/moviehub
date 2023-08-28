@@ -111,3 +111,11 @@ router.post(
   body("mediaRate").exists().withMessage("mediaRate is required"),
   favoriteController.addFavorite as any
 );
+
+router.delete(
+  "/favorites/:favoriteId",
+  tokenMiddleware.auth,
+  favoriteController.removeFavorite as any
+);
+
+export default router;
