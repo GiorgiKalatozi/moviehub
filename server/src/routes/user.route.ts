@@ -31,3 +31,13 @@ router.post(
   requestHandler.validate,
   userController.signUp
 );
+
+router.post(
+  "/signin",
+  body("email").isEmail().withMessage("enter a valid email"),
+  body("password")
+    .isLength({ min: 0 })
+    .withMessage("password minimum 8 characters"),
+  requestHandler.validate,
+  userController.signIn
+);
