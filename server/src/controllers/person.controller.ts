@@ -1,5 +1,5 @@
-import { responseHandler } from "@/handlers";
-import { tmdbApi } from "@/tmdb";
+import { responseHandler } from "../handlers";
+import { tmdbApi } from "../tmdb";
 import { RequestHandler } from "express";
 
 const personDetails: RequestHandler<{ personId: string }> = async (

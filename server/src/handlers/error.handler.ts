@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, NextFunction } from "express";
-import env from "@/utils/validate-env";
+import env from "../utils/validate-env";
 
 class CustomError extends Error {
   constructor(message: string, public status: number) {

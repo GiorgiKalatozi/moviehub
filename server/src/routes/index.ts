@@ -1,3 +1,3 @@
-import userRoutes from "@/routes/user.route";
+import userRoutes from "../routes/user.route";
 
 export { userRoutes };

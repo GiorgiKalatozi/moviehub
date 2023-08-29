@@ -1,5 +1,5 @@
 import { NextFunction, RequestHandler, Response } from "express";
-import { responseHandler } from "@/handlers";
+import { responseHandler } from "../handlers";
 import jsonwebtoken from "jsonwebtoken";
 import {
   EMAIL_TAKEN,
@@ -8,15 +8,15 @@ import {
   PASSWORD_UPDATED,
   USERNAME_TAKEN,
   USER_NOT_FOUND,
-} from "@/constants";
-import { UserModel } from "@/models";
+} from "../constants";
+import { UserModel } from "../models";
 import {
   AuthUserRequest,
   SignInBody,
   SignUpBody,
   UpdatePasswordBody,
-} from "@/types";
-import env from "@/utils/validate-env";
+} from "../types";
+import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (

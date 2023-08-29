@@ -1,6 +1,6 @@
-import { responseHandler } from "@/handlers";
-import { ReviewModel } from "@/models";
-import { AuthUserRequest } from "@/types";
+import { responseHandler } from "../handlers";
+import { ReviewModel } from "../models";
+import { AuthUserRequest } from "../types";
 import { NextFunction, Response } from "express";
 
 const create = async (

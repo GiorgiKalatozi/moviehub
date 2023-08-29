@@ -3,8 +3,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import { errorHandler, notFoundHandler } from "@/handlers";
-import { userRoutes } from "@/routes";
+import { errorHandler, notFoundHandler } from "./handlers";
+import { userRoutes } from "./routes";
 
 const app = express();
 

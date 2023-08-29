@@ -1,4 +1,4 @@
-import env from "@/utils/validate-env";
+import env from "../utils/validate-env";
 
 const baseUrl = env.TMDB_BASE_URL;
 const key = env.TMDB_KEY;

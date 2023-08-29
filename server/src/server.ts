@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import app from "@/app";
-import env from "@/utils/validate-env";
+import app from "./app";
+import env from "./utils/validate-env";
 
 const PORT = env.PORT || 5000;
 

@@ -1,9 +1,9 @@
-import { responseHandler } from "@/handlers";
-import { tmdbApi } from "@/tmdb";
-import { FavoriteModel, UserModel, ReviewModel } from "@/models";
+import { responseHandler } from "../handlers";
+import { tmdbApi } from "../tmdb";
+import { FavoriteModel, UserModel, ReviewModel } from "../models";
 import { RequestHandler } from "express";
-import { FIELDS_MISSING } from "@/constants";
-import { tokenMiddleware } from "@/middlewares";
+import { FIELDS_MISSING } from "../constants";
+import { tokenMiddleware } from "../middlewares";
 
 const getList: RequestHandler<
   { mediaType: string; mediaCategory: string },
