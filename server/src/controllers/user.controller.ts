@@ -5,6 +5,7 @@ import {
   EMAIL_TAKEN,
   FIELDS_MISSING,
   INVALID_PASSWORD,
+  PASSWORDS_DO_NOT_MATCH,
   PASSWORD_UPDATED,
   USERNAME_TAKEN,
   USER_NOT_FOUND,
@@ -18,6 +19,7 @@ import {
 } from "../types";
 import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
+import UserService from "../services/user.service";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   req,
@@ -25,18 +27,27 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   next
 ) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
 
-    if (!username || !email || !password)
+    if (!username || !email || !password || !confirmPassword) {
       return responseHandler.badRequest(res, FIELDS_MISSING);
+    }
 
-    const checkUsername = await UserModel.findOne({ username });
+    if (password !== confirmPassword) {
+      return responseHandler.badRequest(res, PASSWORDS_DO_NOT_MATCH);
+    }
 
-    if (checkUsername) return responseHandler.badRequest(res, USERNAME_TAKEN);
+    const isUsernameAvailable = await UserService.isUsernameAvailable(username);
+
+    if (isUsernameAvailable) {
+      return responseHandler.badRequest(res, USERNAME_TAKEN);
+    }
 
     const checkEmail = await UserModel.findOne({ email });
 
-    if (checkEmail) return responseHandler.badRequest(res, EMAIL_TAKEN);
+    if (checkEmail) {
+      return responseHandler.badRequest(res, EMAIL_TAKEN);
+    }
 
     const passwordHashed = await bcrypt.hash(password, 10);
 
@@ -58,9 +69,7 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
       id: newUser.id,
     });
   } catch (error) {
-    responseHandler.error(res);
-    console.log(error);
-    // next(error);
+    next(error);
   }
 };
 

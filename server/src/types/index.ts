@@ -27,6 +27,7 @@ export type SignUpBody = {
   username?: string;
   email?: string;
   password?: string;
+  confirmPassword?: string;
 };
 
 export type SignInBody = {

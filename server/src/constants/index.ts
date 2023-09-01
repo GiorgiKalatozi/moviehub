@@ -13,3 +13,5 @@ export const INVALID_PASSWORD = "This password is incorrect.";
 export const PASSWORD_UPDATED = "Password updated successfully.";
 
 export const ITEM_REMOVED = "Item has been successfully removed.";
+
+export const PASSWORDS_DO_NOT_MATCH = "Passwords do not match.";

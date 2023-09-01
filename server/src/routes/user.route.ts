@@ -7,44 +7,7 @@ import { tokenMiddleware } from "../middlewares";
 
 const router = express.Router();
 
-router.post(
-  "/signup",
-  body("username")
-    .exists()
-    .withMessage("username is required")
-    .isLength({ min: 8 })
-    .withMessage("username minimum 8 characters")
-    .custom(async (value) => {
-      const user = await UserModel.findOne({ username: value });
-      if (user) return Promise.reject("username already used");
-    }),
-  body("password")
-    .exists()
-    .withMessage("password is required")
-    .isLength({ min: 8 })
-    .withMessage("password minimum 8 characters"),
-  body("confirmPassword")
-    .exists()
-    .withMessage("confirmPassword is required")
-    .isLength({ min: 8 })
-    .withMessage("confirmPassword minimum 8 characters")
-    .custom((value, { req }) => {
-      if (value !== req.body.password)
-        throw new Error("confirmPassword not match");
-      return true;
-    }),
-  body("email")
-    .exists()
-    .withMessage("email is required")
-    .isEmail()
-    .withMessage("enter a valid email")
-    .custom(async (value) => {
-      const email = await UserModel.findOne({ email: value });
-      if (email) return Promise.reject("email already used");
-    }),
-  requestHandler.validate,
-  userController.signUp
-);
+router.post("/signup", userController.signUp);
 
 router.post(
   "/signin",
