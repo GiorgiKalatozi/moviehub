@@ -19,7 +19,7 @@ import {
 } from "../types";
 import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
-import UserService from "../services/user.service";
+import { UserService } from "../services";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   req,
