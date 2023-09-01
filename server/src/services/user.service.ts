@@ -1,29 +1,28 @@
 import { UserModel } from "../models";
 
 class UserService {
-  async createUser(
-    username: string,
-    email: string,
-    password: string
-  ): Promise<any> {
+  async createUser(username: string, email: string, password: string) {
     const newUser = await UserModel.create({
       username,
       email,
-      password: password,
+      password,
     });
 
-    await newUser.save();
+    return await newUser.save();
   }
 
-  async isUsernameAvailable(username: string): Promise<boolean> {
+  async isUsernameAvailable(username: string) {
+    // If a user with the given username exists, it's not available.
     const existingUser = await UserModel.findOne({ username });
 
-    // If a user with the given username exists, it's not available.
     return !existingUser;
   }
 
-  async checkEmailAvailability(email: string): Promise<void> {
-    // Implement email availability check logic here
+  async isEmailAvailable(email: string) {
+    // If a user with the given email exists, it's not available.
+    const existingUser = await UserModel.findOne({ email });
+
+    return !existingUser;
   }
 }
 

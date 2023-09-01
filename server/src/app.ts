@@ -13,10 +13,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// app.use("/", (req, res: any) => {
-//   res.json("hello");
-// });
-
 app.use("/api/v1/user", userRoutes);
 
 app.use(notFoundHandler);

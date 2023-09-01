@@ -39,25 +39,23 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
 
     const isUsernameAvailable = await UserService.isUsernameAvailable(username);
 
-    if (isUsernameAvailable) {
+    if (!isUsernameAvailable) {
       return responseHandler.badRequest(res, USERNAME_TAKEN);
     }
 
-    const checkEmail = await UserModel.findOne({ email });
+    const isEmailAvailable = await UserService.isEmailAvailable(email);
 
-    if (checkEmail) {
+    if (!isEmailAvailable) {
       return responseHandler.badRequest(res, EMAIL_TAKEN);
     }
 
     const passwordHashed = await bcrypt.hash(password, 10);
 
-    const newUser = await UserModel.create({
+    const newUser = await UserService.createUser(
       username,
       email,
-      password: passwordHashed,
-    });
-
-    await newUser.save();
+      passwordHashed
+    );
 
     const token = jsonwebtoken.sign({ data: newUser.id }, env.TOKEN_SECRET, {
       expiresIn: "24h",
