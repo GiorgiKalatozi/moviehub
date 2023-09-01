@@ -37,7 +37,11 @@ router.post(
     .exists()
     .withMessage("email is required")
     .isEmail()
-    .withMessage("enter a valid email"),
+    .withMessage("enter a valid email")
+    .custom(async (value) => {
+      const email = await UserModel.findOne({ email: value });
+      if (email) return Promise.reject("email already used");
+    }),
   requestHandler.validate,
   userController.signUp
 );

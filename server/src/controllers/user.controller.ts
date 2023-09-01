@@ -38,7 +38,7 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
 
     if (checkEmail) return responseHandler.badRequest(res, EMAIL_TAKEN);
 
-    const passwordHashed = bcrypt.hash(password, 10);
+    const passwordHashed = await bcrypt.hash(password, 10);
 
     const newUser = await UserModel.create({
       username,
@@ -58,7 +58,9 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
       id: newUser.id,
     });
   } catch (error) {
-    next(error);
+    responseHandler.error(res);
+    console.log(error);
+    // next(error);
   }
 };
 
@@ -93,11 +95,18 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
       { expiresIn: "24h" }
     );
 
-    return responseHandler.created(res, {
-      token,
-      ...user.toJSON(),
-      id: user.id,
-    });
+    // res.status(201).json({
+    //   token,
+    //   ...user.toJSON(),
+    //   id: user.id,
+    // });
+    res.status(200).json({ hello: "welcome back king kala" });
+
+    // return responseHandler.created(res, {
+    //   token,
+    //   ...user.toJSON(),
+    //   id: user.id,
+    // });
   } catch (error) {
     next(error);
   }
