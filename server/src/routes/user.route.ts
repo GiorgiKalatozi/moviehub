@@ -11,16 +11,18 @@ router.post("/signup", userController.signUp);
 
 router.post(
   "/signin",
-  body("email")
-    .exists()
-    .withMessage("email is required")
-    .isEmail()
-    .withMessage("enter a valid email"),
-  body("password")
-    .exists()
-    .withMessage("password is required")
-    .isLength({ min: 8 })
-    .withMessage("password minimum 8 characters"),
+  [
+    body("email")
+      .exists()
+      .withMessage("email is required")
+      .isEmail()
+      .withMessage("enter a valid email"),
+    body("password")
+      .exists()
+      .withMessage("password is required")
+      .isLength({ min: 8 })
+      .withMessage("password minimum 8 characters"),
+  ],
   requestHandler.validate,
   userController.signIn
 );

@@ -4,6 +4,7 @@ import jsonwebtoken from "jsonwebtoken";
 import {
   EMAIL_TAKEN,
   FIELDS_MISSING,
+  INVALID_EMAIL_ADDRESS,
   INVALID_PASSWORD,
   PASSWORDS_DO_NOT_MATCH,
   PASSWORD_UPDATED,
@@ -20,6 +21,7 @@ import {
 import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
 import { UserService } from "../services";
+import { isValidEmail } from "../utils/validators";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   req,
@@ -31,6 +33,10 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
 
     if (!username || !email || !password || !confirmPassword) {
       return responseHandler.badRequest(res, FIELDS_MISSING);
+    }
+
+    if (!isValidEmail(email)) {
+      return responseHandler.badRequest(res, INVALID_EMAIL_ADDRESS);
     }
 
     if (password !== confirmPassword) {
@@ -102,18 +108,11 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
       { expiresIn: "24h" }
     );
 
-    // res.status(201).json({
-    //   token,
-    //   ...user.toJSON(),
-    //   id: user.id,
-    // });
-    res.status(200).json({ hello: "welcome back king kala" });
-
-    // return responseHandler.created(res, {
-    //   token,
-    //   ...user.toJSON(),
-    //   id: user.id,
-    // });
+    return responseHandler.created(res, {
+      token,
+      ...user.toJSON(),
+      id: user.id,
+    });
   } catch (error) {
     next(error);
   }
