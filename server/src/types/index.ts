@@ -1,4 +1,4 @@
-import { User } from "../models";
+import { User } from "../models/user.model";
 
 export type AuthUser = {
   user: User & { id: string };
@@ -21,13 +21,6 @@ export type MediaSearch = {
   mediaType: string;
   query: string;
   page: string;
-};
-
-export type SignUpBody = {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
 };
 
 export type SignInBody = {
