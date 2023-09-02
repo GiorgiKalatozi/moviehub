@@ -1,5 +1,5 @@
 import { responseHandler } from "../handlers";
-import { ReviewModel } from "../models";
+import ReviewModel from "../models/review.model";
 import { AuthUserRequest } from "../types";
 import { NextFunction, Response } from "express";
 

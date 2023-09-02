@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import { body } from "express-validator";
-import { favoriteController, userController } from "../controllers";
 import { requestHandler } from "../handlers";
-import { tokenMiddleware } from "../middlewares";
-import { validate } from "../middlewares/validate";
+import { validate } from "../middlewares/validate.middleware";
 import { signUpSchema } from "../schemas/user.schema";
+import userController from "../controllers/user.controller";
+import favoriteController from "../controllers/favorite.controller";
+import tokenMiddleware from "../middlewares/token.middleware";
 
 const router = express.Router();
 

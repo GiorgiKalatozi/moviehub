@@ -1,5 +1,5 @@
 import { MediaList, MediaSearch, MediaType } from "../types";
-import { tmdbConfig } from "../tmdb";
+import tmdbConfig from "./tmdb.config";
 
 const tmdbEndpoints = {
   mediaList: ({ mediaType, mediaCategory, page }: MediaList) =>

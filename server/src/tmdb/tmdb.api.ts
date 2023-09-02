@@ -1,6 +1,7 @@
-import { tmdbEndpoints } from "../tmdb";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MediaList, MediaSearch, MediaType } from "../types";
 import axiosClient from "../utils/axios";
+import tmdbEndpoints from "./tmdb.endpoint";
 
 const tmdbApi = {
   mediaList: async ({ mediaType, mediaCategory, page }: MediaList) =>

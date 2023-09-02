@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { responseHandler } from "../handlers";
-import { tmdbApi } from "../tmdb";
-import { FavoriteModel, UserModel, ReviewModel } from "../models";
 import { RequestHandler } from "express";
 import { FIELDS_MISSING } from "../constants";
 import { tokenMiddleware } from "../middlewares";
+import tmdbApi from "../tmdb/tmdb.api";
+import UserModel from "../models/user.model";
+import FavoriteModel from "../models/favorite.model";
+import ReviewModel from "../models/review.model";
 
 const getList: RequestHandler<
   { mediaType: string; mediaCategory: string },

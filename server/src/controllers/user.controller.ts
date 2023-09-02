@@ -7,7 +7,6 @@ import {
   PASSWORD_UPDATED,
   USER_NOT_FOUND,
 } from "../constants";
-import { UserModel } from "../models";
 import {
   AuthUserRequest,
   SignInBody,
@@ -17,7 +16,8 @@ import {
 import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
-import { UserService } from "../services";
+import { UserService } from "../services/user.service";
+import UserModel from "../models/user.model";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   req,

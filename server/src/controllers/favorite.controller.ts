@@ -1,6 +1,6 @@
 import { ITEM_REMOVED } from "../constants";
 import { responseHandler } from "../handlers";
-import { FavoriteModel } from "../models";
+import FavoriteModel from "../models/favorite.model";
 import { AuthUserRequest } from "../types";
 import { NextFunction, Response } from "express";
 
@@ -72,7 +72,9 @@ const getFavoritesOfUser = async (
     );
 
     return responseHandler.ok(res, favorite);
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export default { addFavorite, removeFavorite, getFavoritesOfUser };

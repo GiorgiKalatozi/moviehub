@@ -1,6 +1,6 @@
 import { responseHandler } from "../handlers";
-import { tmdbApi } from "../tmdb";
 import { RequestHandler } from "express";
+import tmdbApi from "../tmdb/tmdb.api";
 
 const personDetails: RequestHandler<{ personId: string }> = async (
   req,
