@@ -2,11 +2,9 @@ import { NextFunction, RequestHandler, Response } from "express";
 import { responseHandler } from "../handlers";
 import jsonwebtoken from "jsonwebtoken";
 import {
-  EMAIL_TAKEN,
   FIELDS_MISSING,
   INVALID_PASSWORD,
   PASSWORD_UPDATED,
-  USERNAME_TAKEN,
   USER_NOT_FOUND,
 } from "../constants";
 import { UserModel } from "../models";
@@ -18,6 +16,7 @@ import {
 } from "../types";
 import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
+import createHttpError from "http-errors";
 import { UserService } from "../services";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
@@ -31,13 +30,13 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
     const isUsernameAvailable = await UserService.isUsernameAvailable(username);
 
     if (!isUsernameAvailable) {
-      return responseHandler.badRequest(res, USERNAME_TAKEN);
+      throw createHttpError(400, "Username is already taken");
     }
 
     const isEmailAvailable = await UserService.isEmailAvailable(email);
 
     if (!isEmailAvailable) {
-      return responseHandler.badRequest(res, EMAIL_TAKEN);
+      throw createHttpError(400, "Email is already in use");
     }
 
     const passwordHashed = await bcrypt.hash(password, 10);
@@ -52,7 +51,7 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
       expiresIn: "24h",
     });
 
-    return responseHandler.created(res, {
+    res.status(201).json({
       token,
       ...newUser.toJSON(),
       id: newUser.id,
