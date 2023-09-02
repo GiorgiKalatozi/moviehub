@@ -1,4 +1,4 @@
-import { User } from "@/models";
+import { User } from "../models";
 
 export type AuthUser = {
   user: User & { id: string };
@@ -31,8 +31,8 @@ export type SignUpBody = {
 };
 
 export type SignInBody = {
-  email?: string;
-  password?: string;
+  email: string;
+  password: string;
 };
 
 export type UpdatePasswordBody = {

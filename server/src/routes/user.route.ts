@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import { body } from "express-validator";
 import { favoriteController, userController } from "../controllers";
 import { requestHandler } from "../handlers";
-import { UserModel } from "../models";
 import { tokenMiddleware } from "../middlewares";
 
 const router = express.Router();

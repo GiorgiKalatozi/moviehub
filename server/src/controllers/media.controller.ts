@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { responseHandler } from "../handlers";
 import { tmdbApi } from "../tmdb";
 import { FavoriteModel, UserModel, ReviewModel } from "../models";
@@ -81,7 +82,7 @@ const getDetail: RequestHandler<{
 
     const params = { mediaId, mediaType };
 
-    const media = await tmdbApi.mediaDetail(params);
+    const media: any = await tmdbApi.mediaDetail(params);
 
     media.credits = await tmdbApi.mediaCredits(params);
 
@@ -89,7 +90,7 @@ const getDetail: RequestHandler<{
 
     media.videos = videos;
 
-    const recommend = await tmdbApi.mediaRecommend(params);
+    const recommend: any = await tmdbApi.mediaRecommend(params);
 
     media.recommend = recommend.results;
 

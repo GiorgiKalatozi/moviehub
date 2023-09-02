@@ -85,8 +85,8 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
   try {
     const { email, password } = req.body;
 
-    if (!email || !password)
-      return responseHandler.badRequest(res, FIELDS_MISSING);
+    // if (!email || !password)
+    //   return responseHandler.badRequest(res, FIELDS_MISSING);
 
     const user = await UserModel.findOne({ email }).select(
       "username password email id"
