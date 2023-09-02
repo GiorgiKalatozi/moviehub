@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserModel } from "../models";
 
 async function createUser(username: string, email: string, password: string) {
@@ -15,17 +16,29 @@ async function createUser(username: string, email: string, password: string) {
 }
 
 async function isUsernameAvailable(username: string) {
-  // If a user with the given username exists, it's not available.
-  const existingUser = await UserModel.findOne({ username });
+  try {
+    // If a user with the given username exists, it's not available.
+    const existingUser = await UserModel.findOne({ username });
 
-  return !existingUser;
+    return !existingUser;
+  } catch (error: any) {
+    throw new Error(
+      `Error while checking username availability: ${error.message}`
+    );
+  }
 }
 
 async function isEmailAvailable(email: string) {
-  // If a user with the given email exists, it's not available.
-  const existingUser = await UserModel.findOne({ email });
+  try {
+    // If a user with the given email exists, it's not available.
+    const existingUser = await UserModel.findOne({ email });
 
-  return !existingUser;
+    return !existingUser;
+  } catch (error: any) {
+    throw new Error(
+      `Error while checking email availability: ${error.message}`
+    );
+  }
 }
 
 export const UserService = {
