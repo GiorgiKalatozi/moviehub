@@ -4,9 +4,7 @@ import jsonwebtoken from "jsonwebtoken";
 import {
   EMAIL_TAKEN,
   FIELDS_MISSING,
-  INVALID_EMAIL_ADDRESS,
   INVALID_PASSWORD,
-  PASSWORDS_DO_NOT_MATCH,
   PASSWORD_UPDATED,
   USERNAME_TAKEN,
   USER_NOT_FOUND,
@@ -21,7 +19,6 @@ import {
 import env from "../utils/validate-env";
 import bcrypt from "bcrypt";
 import { UserService } from "../services";
-import { isValidEmail } from "../utils/validators";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   req,
@@ -29,19 +26,7 @@ const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   next
 ) => {
   try {
-    const { username, email, password, confirmPassword } = req.body;
-
-    if (!username || !email || !password || !confirmPassword) {
-      return responseHandler.badRequest(res, FIELDS_MISSING);
-    }
-
-    if (!isValidEmail(email)) {
-      return responseHandler.badRequest(res, INVALID_EMAIL_ADDRESS);
-    }
-
-    if (password !== confirmPassword) {
-      return responseHandler.badRequest(res, PASSWORDS_DO_NOT_MATCH);
-    }
+    const { username, email, password } = req.body;
 
     const isUsernameAvailable = await UserService.isUsernameAvailable(username);
 
@@ -84,9 +69,6 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
 ) => {
   try {
     const { email, password } = req.body;
-
-    // if (!email || !password)
-    //   return responseHandler.badRequest(res, FIELDS_MISSING);
 
     const user = await UserModel.findOne({ email }).select(
       "username password email id"

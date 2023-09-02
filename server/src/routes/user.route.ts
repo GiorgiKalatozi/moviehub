@@ -4,10 +4,12 @@ import { body } from "express-validator";
 import { favoriteController, userController } from "../controllers";
 import { requestHandler } from "../handlers";
 import { tokenMiddleware } from "../middlewares";
+import { validate } from "../middlewares/validate";
+import { signUpSchema } from "../schemas/user.schema";
 
 const router = express.Router();
 
-router.post("/signup", userController.signUp);
+router.post("/signup", validate(signUpSchema), userController.signUp);
 
 router.post(
   "/signin",
