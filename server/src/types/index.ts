@@ -23,11 +23,6 @@ export type MediaSearch = {
   page: string;
 };
 
-export type SignInBody = {
-  email: string;
-  password: string;
-};
-
 export type UpdatePasswordBody = {
   body: {
     password?: string;

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { UserModel } from "../models";
+
+import UserModel from "../models/user.model";
 
 async function createUser(username: string, email: string, password: string) {
   try {

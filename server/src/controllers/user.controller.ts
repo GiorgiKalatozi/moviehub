@@ -1,19 +1,18 @@
+import bcrypt from "bcrypt";
 import { NextFunction, RequestHandler, Response } from "express";
-import { responseHandler } from "../handlers";
+import createHttpError from "http-errors";
 import jsonwebtoken from "jsonwebtoken";
 import {
   FIELDS_MISSING,
   INVALID_PASSWORD,
   PASSWORD_UPDATED,
-  USER_NOT_FOUND,
 } from "../constants";
-import { AuthUserRequest, SignInBody, UpdatePasswordBody } from "../types";
-import env from "../utils/validate-env";
-import bcrypt from "bcrypt";
-import createHttpError from "http-errors";
-import { UserService } from "../services/user.service";
+import { responseHandler } from "../handlers";
 import UserModel from "../models/user.model";
-import { SignUpBody } from "../schemas/user.schema";
+import { SignInBody, SignUpBody } from "../schemas/user.schema";
+import { UserService } from "../services/user.service";
+import { AuthUserRequest, UpdatePasswordBody } from "../types";
+import env from "../utils/validate-env";
 
 const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (
   req,
@@ -69,7 +68,9 @@ const signIn: RequestHandler<unknown, unknown, SignInBody, unknown> = async (
       "username password email id"
     );
 
-    if (!user) return responseHandler.badRequest(res, USER_NOT_FOUND);
+    if (!user) {
+      throw createHttpError(400, "User does not exist");
+    }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 

@@ -3,7 +3,7 @@ import express from "express";
 import { body } from "express-validator";
 import { requestHandler } from "../handlers";
 import { validate } from "../middlewares/validate.middleware";
-import { signUpSchema } from "../schemas/user.schema";
+import { signInSchema, signUpSchema } from "../schemas/user.schema";
 import userController from "../controllers/user.controller";
 import favoriteController from "../controllers/favorite.controller";
 import tokenMiddleware from "../middlewares/token.middleware";
@@ -12,23 +12,7 @@ const router = express.Router();
 
 router.post("/signup", validate(signUpSchema), userController.signUp);
 
-router.post(
-  "/signin",
-  [
-    body("email")
-      .exists()
-      .withMessage("email is required")
-      .isEmail()
-      .withMessage("enter a valid email"),
-    body("password")
-      .exists()
-      .withMessage("password is required")
-      .isLength({ min: 8 })
-      .withMessage("password minimum 8 characters"),
-  ],
-  requestHandler.validate,
-  userController.signIn
-);
+router.post("/signin", validate(signInSchema), userController.signIn);
 
 router.put(
   "/update-password",
