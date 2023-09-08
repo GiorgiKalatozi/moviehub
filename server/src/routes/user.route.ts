@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from "express";
 import { body } from "express-validator";
+import favoriteController from "../controllers/favorite.controller";
+import userController from "../controllers/user.controller";
 import { requestHandler } from "../handlers";
+import { isAuth } from "../middlewares/token.middleware";
 import { validate } from "../middlewares/validate.middleware";
 import { signInSchema, signUpSchema } from "../schemas/user.schema";
-import userController from "../controllers/user.controller";
-import favoriteController from "../controllers/favorite.controller";
-import tokenMiddleware from "../middlewares/token.middleware";
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post("/signin", validate(signInSchema), userController.signIn);
 
 router.put(
   "/update-password",
-  tokenMiddleware.auth,
+  isAuth,
   body("password")
     .exists()
     .withMessage("password is required")
@@ -41,17 +41,13 @@ router.put(
   userController.updatePassword as any
 );
 
-router.get("/info", tokenMiddleware.auth, userController.getInfo as any);
+router.get("/info", isAuth, userController.getInfo as any);
 
-router.get(
-  "/favorites",
-  tokenMiddleware.auth,
-  favoriteController.getFavoritesOfUser as any
-);
+router.get("/favorites", isAuth, favoriteController.getFavoritesOfUser as any);
 
 router.post(
   "/favorites",
-  tokenMiddleware.auth,
+  isAuth,
   body("mediatype")
     .exists()
     .withMessage("mediatype is required")
@@ -70,7 +66,7 @@ router.post(
 
 router.delete(
   "/favorites/:favoriteId",
-  tokenMiddleware.auth,
+  isAuth,
   favoriteController.removeFavorite as any
 );
 

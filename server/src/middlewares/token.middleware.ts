@@ -30,7 +30,7 @@ const tokenDecode = (req: Request) => {
   }
 };
 
-const auth = async (req: Request, res: Response, next: NextFunction) => {
+const isAuth = async (req: Request, res: Response, next: NextFunction) => {
   const tokenDecoded = tokenDecode(req);
 
   if (!tokenDecoded) return responseHandler.unauthorized(res);
@@ -44,4 +44,4 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default { auth, tokenDecode };
+export { isAuth, tokenDecode };

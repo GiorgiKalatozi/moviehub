@@ -107,6 +107,8 @@ const updatePassword = async (
     if (!password || !newPassword)
       return responseHandler.badRequest(res, FIELDS_MISSING);
 
+    console.log(req.user, "req.user");
+
     const user = await UserModel.findById(req.user.id).select("password id");
 
     if (!user) return responseHandler.unauthorized(res);
